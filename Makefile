@@ -15,8 +15,39 @@ remove-unused-deps:
 	go mod tidy -v
 	@echo "=== Done ==="
 
-# local execution
+# local deploy
+
+local-build:
+	@echo "=== Building service ==="
+	go build -o bin/app/ ./...
+	@echo "=== Done ==="
 
 local-run:
 	@echo "=== Running service ==="
-	@go run main.go
+	@./bin/app/life-calendar-go
+
+# container deployment
+docker-build:
+	@echo "=== Building container ==="
+	docker build --tag life-calendar-go .
+	@echo "=== Done ==="
+# --progress=plain logs output to stdout
+docker-build-verbose:
+	@echo "=== Building container (verbose) ==="
+	docker build --progress=plain --no-cache --tag life-calendar-go .
+	@echo "=== Done ==="
+# -d flag will ignore STDOUT prints
+docker-run-detached-container: docker-build
+	@echo "=== Running container (detached) ==="
+	@docker run -d -p 8180:8080 --name life-calendar-go life-calendar-go
+	@echo "=== Done ==="
+docker-run-container: docker-build
+	@echo "=== Building container ==="
+	@docker run -p 8180:8080 --name life-calendar-go life-calendar-go
+	@echo "=== Done ==="
+docker-clean:
+	@echo "=== Cleaning up docker deployment ==="
+	-@docker stop life-calendar-go
+	-@docker rm life-calendar-go
+	-@docker rmi life-calendar-go
+	@echo "=== Done ==="
