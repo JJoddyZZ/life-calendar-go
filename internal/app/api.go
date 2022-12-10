@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/JJoddyZZ/life-calendar-go/config"
 	"github.com/uptrace/bunrouter"
 	"github.com/uptrace/bunrouter/extra/reqlog"
 )
@@ -17,7 +18,7 @@ type app struct {
 	router *bunrouter.Router
 }
 
-func ServeAPI() {
+func ServeAPI(c *config.Config) {
 	app := &app{
 		router: bunrouter.New(bunrouter.Use(reqlog.NewMiddleware())),
 	}

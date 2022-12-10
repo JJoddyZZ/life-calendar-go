@@ -1,4 +1,4 @@
-# code management
+### code management
 
 fmt:
 	@echo "=== Formating the code ==="
@@ -15,18 +15,19 @@ remove-unused-deps:
 	go mod tidy -v
 	@echo "=== Done ==="
 
-# local deploy
+### local deploy
 
 local-build:
 	@echo "=== Building service ==="
 	go build -o bin/app/ ./...
 	@echo "=== Done ==="
 
-local-run:
+local-run: local-build
 	@echo "=== Running service ==="
 	@./bin/app/life-calendar-go
 
-# container deployment
+### container deployment
+
 docker-build:
 	@echo "=== Building container ==="
 	docker build --tag life-calendar-go .
@@ -51,3 +52,12 @@ docker-clean:
 	-@docker rm life-calendar-go
 	-@docker rmi life-calendar-go
 	@echo "=== Done ==="
+
+### testing
+
+test:
+	@go test -cover -coverprofile=coverage.out -race ./...
+test-verbose:
+	@go test -v -cover -coverprofile=coverage.out -race ./...
+display-cover: test
+	@go tool cover -html=coverage.out

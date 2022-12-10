@@ -1,2 +1,8 @@
 # builds
 bin/
+
+# environment
+.env
+
+# testing
+coverage.out
